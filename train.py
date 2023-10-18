@@ -21,7 +21,7 @@ PARAMS = {
     'epsilon': 1,  # exploration rate
     'epsilon_decay': 0.9999,
     'min_epsilon': 0.01,
-    'n_episodes': 10000,
+    'n_episodes': 50000,
     'tau': 0.01,  # soft update factor for target network
 }
 
@@ -131,8 +131,10 @@ def train(q_network, target_network):
             # Take action and observe environment
             action, reward, done = step(q_network, player)
 
-            # Add experience to buffer
-            buffer.add(state, action, reward, game.state, done)
+            # Add experience to buffer : should we do a deepcopy ?! Looks like it
+            buffer.add(copy.deepcopy(state), copy.deepcopy(action), copy.deepcopy(
+                reward), copy.deepcopy(game.state), copy.deepcopy(done))
+            # buffer.add(state, action, reward, game.state, done)
 
             # Sample a batch from the buffer if it's full
             try:
@@ -187,5 +189,12 @@ def test():
 
 
 if __name__ == '__main__':
+    model = 'model4.pth'
+    # Load existing model
+    if os.path.isfile(model):
+        q_network.load_state_dict(torch.load(model))
+        target_network.load_state_dict(q_network.state_dict())
+        target_network.train(False)
+        print("Model loaded, training further...")
     train(q_network, target_network)
-    torch.save(q_network.state_dict(), 'model.pth')
+    torch.save(q_network.state_dict(), model)
