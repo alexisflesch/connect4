@@ -1,3 +1,14 @@
+"""
+Quick and dirty script to plot the loss function along with epsilon
+
+usage :
+python plot-loss.py <logfilenumber> <smooth_factor>
+
+where <logfilenumber> is a mandatory argument
+and <smooth_factor> is default to 15 if not specified
+"""
+
+
 from matplotlib import pyplot as plt
 import sys
 import os
