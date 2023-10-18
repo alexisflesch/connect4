@@ -14,12 +14,12 @@ import os
 
 # Hyperparameters
 PARAMS = {
-    'learning_rate': 0.001,
+    'learning_rate': 0.0001,
     'gamma': 0.99,  # discount factor
     'buffer_size': 1000,
-    'batch_size': 16,
+    'batch_size': 32,
     'epsilon': 1,  # exploration rate
-    'epsilon_decay': 0.9999,
+    'epsilon_decay': 0.99999,
     'min_epsilon': 0.01,
     'n_episodes': 50000,
     'tau': 0.01,  # soft update factor for target network
@@ -132,9 +132,7 @@ def train(q_network, target_network):
             action, reward, done = step(q_network, player)
 
             # Add experience to buffer : should we do a deepcopy ?! Looks like it
-            buffer.add(copy.deepcopy(state), copy.deepcopy(action), copy.deepcopy(
-                reward), copy.deepcopy(game.state), copy.deepcopy(done))
-            # buffer.add(state, action, reward, game.state, done)
+            buffer.add(state, action, reward, game.state, done)
 
             # Sample a batch from the buffer if it's full
             try:

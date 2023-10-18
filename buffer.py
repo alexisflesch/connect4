@@ -20,6 +20,7 @@ Methods :
 """
 
 import numpy as np
+from copy import deepcopy
 
 
 class replay_buffer:
@@ -50,20 +51,20 @@ class replay_buffer:
         Otherwise, change the experience at the current (rolling) index.
         """
         if not self.full:
-            self.buffer['states'].append(state)
-            self.buffer['actions'].append(action)
-            self.buffer['rewards'].append(reward)
-            self.buffer['next_states'].append(next_state)
-            self.buffer['dones'].append(done)
+            self.buffer['states'].append(deepcopy(state))
+            self.buffer['actions'].append(deepcopy(action))
+            self.buffer['rewards'].append(deepcopy(reward))
+            self.buffer['next_states'].append(deepcopy(next_state))
+            self.buffer['dones'].append(deepcopy(done))
             self.full = len(self.buffer['states']) == self.buffer_size
         else:
             if self.idx == self.buffer_size:
                 self.idx = 0
-            self.buffer['states'][self.idx] = state
-            self.buffer['actions'][self.idx] = action
-            self.buffer['rewards'][self.idx] = reward
-            self.buffer['next_states'][self.idx] = next_state
-            self.buffer['dones'][self.idx] = done
+            self.buffer['states'][self.idx] = deepcopy(state)
+            self.buffer['actions'][self.idx] = deepcopy(action)
+            self.buffer['rewards'][self.idx] = deepcopy(reward)
+            self.buffer['next_states'][self.idx] = deepcopy(next_state)
+            self.buffer['dones'][self.idx] = deepcopy(done)
             self.idx += 1
 
     def sample(self, batch_size):
