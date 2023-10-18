@@ -188,3 +188,4 @@ def test():
 
 if __name__ == '__main__':
     train(q_network, target_network)
+    torch.save(q_network.state_dict(), 'model.pth')
