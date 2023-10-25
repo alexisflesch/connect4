@@ -24,7 +24,7 @@ A bunch of neural networks to try out.
 A few basic algorithm for the environment's response to the agent's actions.
 
 ## check_perf.py
-Work in progress : estimate the agent's performance against a few opponents.
+To estimate the agent's performance against a few opponents.
 
 
 # Notes
