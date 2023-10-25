@@ -20,6 +20,7 @@ Markov Decision Process for the game of connect 4.
 
 
 import numpy as np
+import copy
 
 
 class connect4():
@@ -81,6 +82,17 @@ class connect4():
                 # Place player's chip in the empty slot
                 self.state[index] = player
                 break
+
+    def winning_move(self, player):
+        """
+        Check if a player can win the game
+        """
+        for action in self.action_space():
+            game_copy = copy.deepcopy(self)
+            game_copy.drop_piece(action, player)
+            if game_copy.check_winner() == player:
+                return action
+        return None
 
     def check_winner(self):
         # Check for a win in rows, columns, and diagonals

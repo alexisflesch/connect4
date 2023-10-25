@@ -21,6 +21,7 @@ Methods :
 
 import numpy as np
 from copy import deepcopy
+from collections import deque
 
 
 class replay_buffer:
@@ -35,11 +36,11 @@ class replay_buffer:
 
     def __init__(self, buffer_size):
         self.buffer = {
-            'states': [],
-            'actions': [],
-            'rewards': [],
-            'next_states': [],
-            'dones': [],
+            'states': deque(maxlen=buffer_size),
+            'actions': deque(maxlen=buffer_size),
+            'rewards': deque(maxlen=buffer_size),
+            'next_states': deque(maxlen=buffer_size),
+            'dones': deque(maxlen=buffer_size),
         }
         self.full = False  # has the buffer been filled?
         self.buffer_size = buffer_size
@@ -50,22 +51,13 @@ class replay_buffer:
         If buffer is not full, add the experience to the buffer.
         Otherwise, change the experience at the current (rolling) index.
         """
+        self.buffer['states'].append(deepcopy(state))
+        self.buffer['actions'].append(deepcopy(action))
+        self.buffer['rewards'].append(deepcopy(reward))
+        self.buffer['next_states'].append(deepcopy(next_state))
+        self.buffer['dones'].append(deepcopy(done))
         if not self.full:
-            self.buffer['states'].append(deepcopy(state))
-            self.buffer['actions'].append(deepcopy(action))
-            self.buffer['rewards'].append(deepcopy(reward))
-            self.buffer['next_states'].append(deepcopy(next_state))
-            self.buffer['dones'].append(deepcopy(done))
             self.full = len(self.buffer['states']) == self.buffer_size
-        else:
-            if self.idx == self.buffer_size:
-                self.idx = 0
-            self.buffer['states'][self.idx] = deepcopy(state)
-            self.buffer['actions'][self.idx] = deepcopy(action)
-            self.buffer['rewards'][self.idx] = deepcopy(reward)
-            self.buffer['next_states'][self.idx] = deepcopy(next_state)
-            self.buffer['dones'][self.idx] = deepcopy(done)
-            self.idx += 1
 
     def sample(self, batch_size):
         """

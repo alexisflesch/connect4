@@ -5,17 +5,18 @@ Quick and dirty script to play against the AI
 
 import torch
 import mdp as c4
-from neural_network import DDQN
+import neural_networks
 
+net = neural_networks.DDQN3
 
 # Create an instance of the connect4 game
 game = c4.connect4()
 
 # Create the Q-Network that matches the architecture used for training
-q_network = DDQN()
+q_network = net()
 
 # Load the trained model weights
-q_network.load_state_dict(torch.load('model.pth'))
+q_network.load_state_dict(torch.load('models/model_129.pth'))
 q_network.eval()  # Set the Q-network to evaluation mode
 
 
@@ -54,7 +55,7 @@ def main():
         # DQN's turn
         # Obtain Q-values for all actions
         q_values = q_network(torch.tensor(game.state, dtype=torch.float32))
-
+        q_values = q_values.view(-1, 1)
         # Get the action space from the MDP
         action_space = game.action_space()
 
